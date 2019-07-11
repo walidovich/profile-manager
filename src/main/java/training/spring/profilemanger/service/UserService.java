@@ -14,7 +14,11 @@ public class UserService {
 	}
 
 	public User save(User user) {
-		return userRepository.save(user);
+		if (userRepository.findByEmail(user.getEmail()) == null) {
+			return userRepository.save(user);
+		} else {
+			return null;
+		}
 	}
 
 	public Iterable<User> findAll() {

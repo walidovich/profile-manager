@@ -18,23 +18,17 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@GetMapping("/userList")
-	public ModelAndView userList() {
-		ModelAndView modelAndView = new ModelAndView(VIEW_PATH + "userList");
-		modelAndView.addObject("users", userService.findAll());
-		return modelAndView;
-	}
-
 	@GetMapping("/user")
 	public ModelAndView userForm() {
-		ModelAndView modelAndView = new ModelAndView(VIEW_PATH + "userForm");
+		ModelAndView modelAndView = new ModelAndView(VIEW_PATH + "user");
 		modelAndView.addObject("user", new User());
+		modelAndView.addObject("users", userService.findAll());
 		return modelAndView;
 	}
 
 	@PostMapping("/user")
 	public ModelAndView userFormSubmit(ModelAndView modelAndView, @ModelAttribute User user) {
-		modelAndView.setViewName("redirect:/userList");
+		modelAndView.setViewName("redirect:/user");
 		userService.save(user);
 		return modelAndView;
 	}

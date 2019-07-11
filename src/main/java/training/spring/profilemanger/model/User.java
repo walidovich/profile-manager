@@ -2,10 +2,7 @@ package training.spring.profilemanger.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -13,12 +10,13 @@ import javax.validation.constraints.NotEmpty;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long   id;
+	private Long id;
 	@NotEmpty
 	private String firstName;
 	@NotEmpty
 	private String lastName;
 	@NotEmpty
+	@Column(unique = true)
 	private String email;
 	@NotEmpty
 	private String password;
