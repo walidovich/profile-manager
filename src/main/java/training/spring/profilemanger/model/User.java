@@ -2,10 +2,7 @@ package training.spring.profilemanger.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -19,6 +16,7 @@ public class User {
 	@NotEmpty
 	private String lastName;
 	@NotEmpty
+	@Column(unique = true)
 	private String email;
 	@NotEmpty
 	private String password;

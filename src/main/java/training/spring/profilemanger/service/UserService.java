@@ -14,10 +14,27 @@ public class UserService {
 	}
 
 	public User save(User user) {
-		return userRepository.save(user);
+		user = trimWhiteSpaces(user);
+		if (userRepository.findByEmail(user.getEmail()) == null) {
+			return userRepository.save(user);
+		} else {
+			return null;
+		}
+	}
+
+	private User trimWhiteSpaces(User user) {
+		user.setFirstName(user.getFirstName().trim());
+		user.setLastName(user.getLastName().trim());
+		user.setEmail(user.getEmail().trim());
+		return user;
 	}
 
 	public Iterable<User> findAll() {
 		return userRepository.findAll();
+	}
+
+	public User findByEmail(String email) {
+		email = email.trim();
+		return userRepository.findByEmail(email);
 	}
 }
