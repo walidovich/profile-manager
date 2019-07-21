@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import training.spring.profilemanger.exception.PasswordsNotMatchingException;
+import training.spring.profilemanger.exception.UserEmailExistsException;
 import training.spring.profilemanger.model.User;
 import training.spring.profilemanger.model.UserLogin;
 import training.spring.profilemanger.service.UserService;
@@ -40,26 +42,25 @@ public class IdentificationController {
 	}
 
 	@PostMapping("/signup")
-	public ModelAndView userFormSubmit(ModelAndView modelAndView, @ModelAttribute @Valid User user,
-	                                   BindingResult bindingResult, @ModelAttribute("passwordConfirmation") String passwordConfirmation) {
+	public ModelAndView signupSubmit(ModelAndView modelAndView, @ModelAttribute @Valid User user,
+	                                 BindingResult bindingResult, @ModelAttribute("passwordConfirmation") String passwordConfirmation) {
 		if (bindingResult.hasErrors()) {
 			modelAndView.setViewName(VIEW_PATH + "signup");
 		} else {
-			if (userService.arePasswordsMatching(user.getPassword(), passwordConfirmation)
-					&& userService.findByEmail(user.getEmail()) == null) {
+			try {
+				userService.validateAllFields(user, passwordConfirmation);
 				userService.save(user);
 				modelAndView.addObject("users", userService.findAll());
 				modelAndView.setViewName("redirect:/users");
-			} else {
+			} catch (PasswordsNotMatchingException e) {
+				bindingResult.rejectValue("password", "error.user", "passwords are not matching");
 				modelAndView.setViewName(VIEW_PATH + "signup");
-				if (!userService.arePasswordsMatching(user.getPassword(), passwordConfirmation)) {
-					bindingResult.rejectValue("password", "error.user", "passwords are not matching");
-				}
-				if (userService.findByEmail(user.getEmail()) != null) {
-					bindingResult.rejectValue("email", "error.user", "email already in use");
-				}
+			} catch (UserEmailExistsException e) {
+				bindingResult.rejectValue("email", "error.user", "email already in use");
+				modelAndView.setViewName(VIEW_PATH + "signup");
 			}
 		}
 		return modelAndView;
 	}
 }
+

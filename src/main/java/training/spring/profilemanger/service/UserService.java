@@ -1,6 +1,8 @@
 package training.spring.profilemanger.service;
 
 import org.springframework.stereotype.Service;
+import training.spring.profilemanger.exception.PasswordsNotMatchingException;
+import training.spring.profilemanger.exception.UserEmailExistsException;
 import training.spring.profilemanger.model.User;
 import training.spring.profilemanger.repository.UserRepository;
 
@@ -13,13 +15,16 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public User save(User user) {
+	public void validateAllFields(User user, String passwordConfirmation) throws PasswordsNotMatchingException, UserEmailExistsException {
 		user = trimWhiteSpaces(user);
-		if (userRepository.findByEmail(user.getEmail()) == null) {
-			return userRepository.save(user);
-		} else {
-			return null;
+		checkPasswordsMatching(user.getPassword(), passwordConfirmation);
+		if (userRepository.findByEmail(user.getEmail()) != null) {
+			throw new UserEmailExistsException();
 		}
+	}
+
+	public User save(User user) {
+		return userRepository.save(user);
 	}
 
 	private User trimWhiteSpaces(User user) {
@@ -33,12 +38,9 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
-	public User findByEmail(String email) {
-		email = email.trim();
-		return userRepository.findByEmail(email);
-	}
-
-	public boolean arePasswordsMatching(String password, String passwordConfirmation) {
-		return passwordConfirmation != null && passwordConfirmation.equals(password);
+	private void checkPasswordsMatching(String password, String passwordConfirmation) throws PasswordsNotMatchingException {
+		if (passwordConfirmation == null || !passwordConfirmation.equals(password)) {
+			throw new PasswordsNotMatchingException();
+		}
 	}
 }
