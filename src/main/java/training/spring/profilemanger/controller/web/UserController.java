@@ -30,7 +30,8 @@ public class UserController {
 
 	@GetMapping("/user")
 	public ModelAndView userForm() {
-		ModelAndView modelAndView = new ModelAndView(VIEW_PATH + "userForm");
+		ModelAndView modelAndView = new ModelAndView(VIEW_PATH + "user");
+		modelAndView.addObject("users", userService.findAll());
 		modelAndView.addObject("user", new User());
 		return modelAndView;
 	}
@@ -38,16 +39,17 @@ public class UserController {
 	@PostMapping("/user")
 	public ModelAndView userFormSubmit(ModelAndView modelAndView, @ModelAttribute @Valid User user, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			modelAndView.setViewName(VIEW_PATH + "userForm");
+			modelAndView.setViewName(VIEW_PATH + "user");
 		} else {
 			User savedUser = userService.save(user);
 			if (savedUser != null) {
-				modelAndView.setViewName("redirect:/userList");
+				modelAndView.setViewName("redirect:/user");
 			} else {
-				modelAndView.setViewName(VIEW_PATH + "userForm");
+				modelAndView.setViewName(VIEW_PATH + "user");
 				modelAndView.addObject("duplicateEmail", "This email is already used");
 			}
 		}
+		modelAndView.addObject("users", userService.findAll());
 		return modelAndView;
 	}
 }
