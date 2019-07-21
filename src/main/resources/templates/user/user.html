@@ -36,7 +36,8 @@
         </tr>
     </table>
 </form>
-<p></p><hr>
+<p></p>
+<hr>
 <table border="1" style="border-collapse: collapse" width="50%">
     <tr>
         <th>Id</th>
@@ -51,5 +52,9 @@
         <td th:text="${user.email}">email@email.com</td>
     </tr>
 </table>
+<hr>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
 </body>
 </html>
