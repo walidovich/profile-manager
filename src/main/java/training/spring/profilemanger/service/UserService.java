@@ -37,4 +37,8 @@ public class UserService {
 		email = email.trim();
 		return userRepository.findByEmail(email);
 	}
+
+	public boolean arePasswordsMatching(String password, String passwordConfirmation) {
+		return passwordConfirmation != null && passwordConfirmation.equals(password);
+	}
 }
