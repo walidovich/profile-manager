@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long   id;
+	private Long id;
 	@NotEmpty
 	private String firstName;
 	@NotEmpty
