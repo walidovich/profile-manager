@@ -1,5 +1,6 @@
 package training.spring.profilemanger.controller.web;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +18,12 @@ import javax.validation.Valid;
 @Controller
 public class IdentificationController {
 
-	private UserService userService;
+	private UserService     userService;
+	private PasswordEncoder passwordEncoder;
 
-	public IdentificationController(UserService userService) {
+	public IdentificationController(UserService userService, PasswordEncoder passwordEncoder) {
 		this.userService = userService;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	private static final String VIEW_PATH = "identification/";
@@ -61,6 +64,11 @@ public class IdentificationController {
 			}
 		}
 		return modelAndView;
+	}
+
+	@PostMapping("/logout")
+	public ModelAndView logout() {
+		return new ModelAndView("redirect:/login");
 	}
 }
 
