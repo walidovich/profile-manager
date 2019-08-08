@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -12,7 +14,7 @@ import javax.validation.constraints.NotEmpty;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long   id;
+	private Long id;
 	@NotEmpty
 	private String firstName;
 	@NotEmpty
@@ -22,6 +24,10 @@ public class User {
 	private String email;
 	@NotEmpty
 	private String password;
+	@ManyToMany
+	@JoinTable(joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "connection_id", referencedColumnName = "id"))
+	private List<User> connections;
 
 	public User(User user) {
 		this.id = user.id;
@@ -29,6 +35,6 @@ public class User {
 		this.lastName = user.lastName;
 		this.email = user.email;
 		this.password = user.password;
+		this.connections = new ArrayList<>();
 	}
-
 }

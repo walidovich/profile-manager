@@ -14,7 +14,7 @@ import training.spring.profilemanger.repository.UserRepository;
 @Service
 public class UserService implements UserDetailsService {
 
-	private UserRepository  userRepository;
+	private UserRepository userRepository;
 	private PasswordEncoder passwordEncoder;
 
 	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -60,5 +60,9 @@ public class UserService implements UserDetailsService {
 		} else {
 			throw new UsernameNotFoundException(username + " doesn't exist");
 		}
+	}
+
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email);
 	}
 }
