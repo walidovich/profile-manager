@@ -24,6 +24,7 @@ public class User {
 	private String email;
 	@NotEmpty
 	private String password;
+	private String imagePath;
 	@ManyToMany
 	@JoinTable(joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "connection_id", referencedColumnName = "id"))

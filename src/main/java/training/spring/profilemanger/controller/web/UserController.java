@@ -31,7 +31,7 @@ public class UserController {
 	@GetMapping("/addConnection/{user_id}")
 	public ModelAndView addConnection(@PathVariable(name = "user_id") Long id) {
 		User connectedUser = getConnectedUser();
-		userService.connectUsers(connectedUser.getId(), id);
+		userService.addUsersConnection(connectedUser.getId(), id);
 		ModelAndView modelAndView = new ModelAndView("redirect:/users");
 		return modelAndView;
 	}

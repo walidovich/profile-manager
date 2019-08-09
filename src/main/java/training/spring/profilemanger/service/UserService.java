@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByEmail(email);
 	}
 
-	public void connectUsers(Long id1, Long id2) {
+	public void addUsersConnection(Long id1, Long id2) {
 		User user1 = userRepository.findById(id1).get();
 		User user2 = userRepository.findById(id2).get();
 		user1.getConnections().add(user2);

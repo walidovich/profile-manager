@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>User Sign-up Form:</h1>
-<form action="#" th:action="@{/signup}" th:object="${user}" method="post">
+<form action="#" th:action="@{/signup}" th:object="${user}" method="post" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}"/>
     <table>
         <tr>
@@ -33,6 +33,15 @@
             <td>Password Confirmation</td>
             <td>:<input type="password" name="passwordConfirmation"/></td>
         </tr>
+        <tr>
+            <td>Upload image</td>
+            <td>:<input type="file" name="image"/></td>
+        </tr>
+        <tr>
+        </tr>
+        <td>
+            <p></p>
+        </td>
         <tr>
             <td></td>
             <td><input type="submit" value="Submit"/><input type="reset" value="Reset"/></td>

@@ -1,29 +1,32 @@
 package training.spring.profilemanger.controller.web;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import training.spring.profilemanger.exception.PasswordsNotMatchingException;
 import training.spring.profilemanger.exception.UserEmailExistsException;
 import training.spring.profilemanger.model.User;
 import training.spring.profilemanger.model.UserLogin;
+import training.spring.profilemanger.service.ImageService;
 import training.spring.profilemanger.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
 public class IdentificationController {
 
-	private UserService     userService;
-	private PasswordEncoder passwordEncoder;
+	private UserService userService;
+	private ImageService imageService;
 
-	public IdentificationController(UserService userService, PasswordEncoder passwordEncoder) {
+	public IdentificationController(UserService userService, ImageService imageService) {
 		this.userService = userService;
-		this.passwordEncoder = passwordEncoder;
+		this.imageService = imageService;
 	}
 
 	private static final String VIEW_PATH = "identification/";
@@ -46,12 +49,15 @@ public class IdentificationController {
 
 	@PostMapping("/signup")
 	public ModelAndView signupSubmit(ModelAndView modelAndView, @ModelAttribute @Valid User user,
+	                                 @RequestParam("image") MultipartFile image, HttpServletRequest request,
 	                                 BindingResult bindingResult, @ModelAttribute("passwordConfirmation") String passwordConfirmation) {
 		if (bindingResult.hasErrors()) {
 			modelAndView.setViewName(VIEW_PATH + "signup");
 		} else {
 			try {
 				userService.validateAllFields(user, passwordConfirmation);
+				imageService.storeImage(image, request);
+				user.setImagePath(image.getOriginalFilename());
 				userService.save(user);
 				modelAndView.addObject("users", userService.findAll());
 				modelAndView.setViewName("redirect:/users");
