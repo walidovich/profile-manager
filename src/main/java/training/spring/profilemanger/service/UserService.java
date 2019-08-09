@@ -65,4 +65,20 @@ public class UserService implements UserDetailsService {
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
+
+	public void connectUsers(Long id1, Long id2) {
+		User user1 = userRepository.findById(id1).get();
+		User user2 = userRepository.findById(id2).get();
+		user1.getConnections().add(user2);
+		user2.getConnections().add(user1);
+		userRepository.save(user1);
+	}
+
+	public void removeUsersConnection(Long id1, Long id2) {
+		User user1 = userRepository.findById(id1).get();
+		User user2 = userRepository.findById(id2).get();
+		user1.getConnections().remove(user2);
+		user2.getConnections().remove(user1);
+		userRepository.save(user1);
+	}
 }

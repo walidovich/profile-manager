@@ -21,7 +21,16 @@
         <td th:text="${user.email}">email@email.com</td>
         <td th:switch="${user.id}">
             <span th:case="${connectedUser.id}"></span>
-            <span th:case="*">connect</span>
+            <span th:case="*">
+                <span th:switch="${connectedUser.connections.contains(user)}">
+                    <span th:case="${true}">Connected
+                        <a href="#" th:href="@{'/removeConnection/'+${user.id}}">(Disconnect)</a>
+                    </span>
+                    <span th:case="${false}">
+                        <a href="#" th:href="@{'/addConnection/'+${user.id}}">Connect</a>
+                    </span>
+                </span>
+            </span>
         </td>
     </tr>
 </table>
