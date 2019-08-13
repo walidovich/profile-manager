@@ -46,7 +46,7 @@ public class UserController {
 
 	private User getConnectedUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String username = null;
+		String username;
 		if (principal instanceof UserDetails) {
 			username = ((UserDetails) principal).getUsername();
 		} else {

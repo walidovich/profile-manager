@@ -12,21 +12,18 @@ import training.spring.profilemanger.exception.PasswordsNotMatchingException;
 import training.spring.profilemanger.exception.UserEmailExistsException;
 import training.spring.profilemanger.model.User;
 import training.spring.profilemanger.model.UserLogin;
-import training.spring.profilemanger.service.ImageService;
 import training.spring.profilemanger.service.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 public class IdentificationController {
 
 	private UserService userService;
-	private ImageService imageService;
 
-	public IdentificationController(UserService userService, ImageService imageService) {
+	public IdentificationController(UserService userService) {
 		this.userService = userService;
-		this.imageService = imageService;
 	}
 
 	private static final String VIEW_PATH = "identification/";
@@ -49,16 +46,14 @@ public class IdentificationController {
 
 	@PostMapping("/signup")
 	public ModelAndView signupSubmit(ModelAndView modelAndView, @ModelAttribute @Valid User user,
-	                                 @RequestParam("image") MultipartFile image, HttpServletRequest request,
-	                                 BindingResult bindingResult, @ModelAttribute("passwordConfirmation") String passwordConfirmation) {
+	                                 @RequestParam("image") MultipartFile image, BindingResult bindingResult,
+	                                 @ModelAttribute("passwordConfirmation") String passwordConfirmation) {
 		if (bindingResult.hasErrors()) {
 			modelAndView.setViewName(VIEW_PATH + "signup");
 		} else {
 			try {
 				userService.validateAllFields(user, passwordConfirmation);
-				imageService.storeImage(image, request);
-				user.setImagePath(image.getOriginalFilename());
-				userService.save(user);
+				userService.save(user, image);
 				modelAndView.addObject("users", userService.findAll());
 				modelAndView.setViewName("redirect:/users");
 			} catch (PasswordsNotMatchingException e) {
@@ -67,6 +62,8 @@ public class IdentificationController {
 			} catch (UserEmailExistsException e) {
 				bindingResult.rejectValue("email", "error.user", "email already in use");
 				modelAndView.setViewName(VIEW_PATH + "signup");
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		return modelAndView;

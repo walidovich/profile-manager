@@ -15,7 +15,7 @@ import training.spring.profilemanger.service.UserService;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private PasswordEncoder    passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	private UserDetailsService userService;
 
 	public WebSecurityConfig(PasswordEncoder passwordEncoder, UserService userService) {
@@ -26,16 +26,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.authorizeRequests()
-				.antMatchers("/login", "/signup").permitAll()
+				.authorizeRequests().antMatchers("/login", "/signup").permitAll()
 				.anyRequest().authenticated()
 				.and()
-				.formLogin()
-				.loginPage("/login")
-				.permitAll()
+				.formLogin().loginPage("/login").permitAll()
 				.and()
-				.logout()
-				.permitAll();
+				.logout().permitAll();
 	}
 
 	@Override
