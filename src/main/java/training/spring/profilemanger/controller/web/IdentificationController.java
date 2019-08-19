@@ -14,6 +14,8 @@ import training.spring.profilemanger.model.User;
 import training.spring.profilemanger.model.UserLogin;
 import training.spring.profilemanger.service.UserService;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -47,13 +49,16 @@ public class IdentificationController {
 	@PostMapping("/signup")
 	public ModelAndView signupSubmit(ModelAndView modelAndView, @ModelAttribute @Valid User user,
 	                                 @RequestParam("image") MultipartFile image, BindingResult bindingResult,
+	                                 HttpServletRequest request,
 	                                 @ModelAttribute("passwordConfirmation") String passwordConfirmation) {
 		if (bindingResult.hasErrors()) {
 			modelAndView.setViewName(VIEW_PATH + "signup");
 		} else {
 			try {
 				userService.validateAllFields(user, passwordConfirmation);
+				String password = user.getPassword();
 				userService.save(user, image);
+				request.login(user.getEmail(), password);
 				modelAndView.addObject("users", userService.findAll());
 				modelAndView.setViewName("redirect:/users");
 			} catch (PasswordsNotMatchingException e) {
@@ -63,6 +68,8 @@ public class IdentificationController {
 				bindingResult.rejectValue("email", "error.user", "email already in use");
 				modelAndView.setViewName(VIEW_PATH + "signup");
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ServletException e) {
 				e.printStackTrace();
 			}
 		}
