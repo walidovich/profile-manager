@@ -25,8 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-				.authorizeRequests().antMatchers("/login", "/signup").permitAll()
+		http.authorizeRequests().antMatchers("/login", "/signup").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.formLogin().loginPage("/login").permitAll()
@@ -36,8 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) {
-		auth
-				.authenticationProvider(authProvider());
+		auth.authenticationProvider(authProvider());
 	}
 
 	@Bean

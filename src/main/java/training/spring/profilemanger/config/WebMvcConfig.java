@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebMvcConfig {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		PasswordEncoder encoder = new BCryptPasswordEncoder(12);
-		return encoder;
+		return new BCryptPasswordEncoder(12);
 	}
 }
